@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To-Do List</title>
+	<style>
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		input[type="text"] {
+			padding: 10px;
+			margin: 10px;
+			width: 300px;
+		}
+
+		button {
+			padding: 10px;
+			background-color: rgb(40, 107, 40);
+			color: white;
+			border: none;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: rgb(87, 177, 87);
+		}
+
+		ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		li {
+			padding: 10px;
+			margin: 5px;
+			background-color: white;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		li.completed {
+			text-decoration: line-through;
+			background-color: rgb(193, 191, 191);
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>To-Do List</h1>
+		<input type="text" id="input-task" placeholder="Enter task">
+		<button id="add-task-btn">Add</button>
+		<ul id="task-list"></ul>
+		<div>
+			<label for="filter-tasks">Filter:</label>
+			<select id="filter-tasks">
+				<option value="all">All</option>
+				<option value="completed">Completed</option>
+				<option value="active">Active</option>
+			</select>
+		</div>
+	</div>
+
+	<script>
+		const inputTask = document.getElementById("input-task");
+		const addTaskBtn = document.getElementById("add-task-btn");
+		const taskList = document.getElementById("task-list");
+		const filterTasks = document.getElementById("filter-tasks");
+
+		let todos = [];
+
+		addTaskBtn.addEventListener("click", function() {
+			const newTask = {
+				text: inputTask.value,
+				completed: false
+			};
+
+			todos.push(newTask);
+			inputTask.value = "";
+			renderList();
+		});
+
+		filterTasks.addEventListener("change", function() {
+			renderList();
+		});
+
+		function renderList() {
+			taskList.innerHTML = "";
+
+			const filterValue = filterTasks.value;
+
+			for (let i = 0; i < todos.length; i++) {
+				if (filterValue === "completed" && !todos[i].completed) {
+					continue;
+				}
+				if (filterValue === "active" && todos[i].completed) {
+					continue;
+				}
+
+				const li = document.createElement("li");
+				li.innerText = todos[i].text;
+				if (todos[i].completed) {
+					li.classList.add("completed");
+				}
+				li.addEventListener("click", function() {
+					todos[i].completed = !todos[i].completed;
+					renderList();
+				});
+				taskList.appendChild(li);
+			}
+		}
+	</script>
+</body>
+</html>
